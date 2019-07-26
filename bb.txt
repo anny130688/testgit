@@ -1,9 +1,187 @@
-Git is a distributed version control system.
-Git is free software.
-Git has a mutable index called stage.
-1111
-2222
-3333
-qqqq
-4444
+using System;
+using System.Collections.Generic;
+首先需要保证最大堆和最小堆能够平均分配数据，因此两个堆的数目差不能超过1.为了实现平均分配，
+可以在数据的总数目是偶数时把新数据插入最小堆，否则插入最大堆。
 
+
+//如果要把新数据插入最大堆max，先判断新数据是否小于最小堆的最大值，如果是，那么先把新数据插入最小堆，
+取出最小堆的最大值，把得到的最大值插入最大堆max中
+namespace 数据流中的中位数
+
+{
+
+    class Program
+
+    {
+
+        static void Main(string[] args)
+
+        {
+
+            int[] num = new int[9] { 5, 2, 3, 4, 1, 6, 7, 0, 8 };
+
+            Solution s = new Solution();
+
+            for (int i = 0; i < num.Length; i++)        //模拟逐次从流中读出数据，取其中位数查看结果
+
+            {
+
+                s.Insert(num[i]);
+
+                Console.WriteLine(s.GetMedian());
+
+            }
+
+        }
+
+    }
+
+    class Solution
+
+    {
+
+        private List<int> max = new List<int>();                //容器右边较大数所存储的堆
+
+        private List<int> min = new List<int>();                //容器左边较小数所存储的堆
+
+ 
+
+ 
+
+        /// <summary>
+
+        /// 首先需要保证最大堆和最小堆能够平均分配数据，因此两个堆的数目差不能超过1.为了实现平均分配，可以在数据的总数目是偶数时把新数据插入最小堆，否则插入最大堆。
+
+        /// </summary>
+
+        /// <param name="num">插入的数字</param>
+
+        public void Insert(int num)
+
+        {
+
+            //如果两个容器数量不平衡，则让其保持平衡，把新数据添加到max中
+
+            if (((min.Count + max.Count) & 1) == 0)
+
+            {
+
+                //新插入的数据大于最小堆的最大值，那么先把这个数据添加进最大堆，然后取出最大堆的最小值，把最小值插入最小堆min中
+
+                if (max.Count > 0 && num > max[0])
+
+                {
+
+                    Add(max, num);
+
+                    num = max[0];
+
+                    max.RemoveAt(0);
+
+                }
+
+                Add(min, num);
+
+            }
+
+            else
+
+            {
+
+                //如果要把新数据插入最大堆max，先判断新数据是否小于最小堆的最大值，如果是，那么先把新数据插入最小堆，取出最小堆的最大值，
+
+                //把得到的最大值插入最大堆max中
+
+                if (min.Count > 0 && min[min.Count - 1] > num)
+
+                {
+
+                    Add(min, num);
+
+                    num = min[min.Count - 1];
+
+                    min.RemoveAt(min.Count - 1);
+
+                }
+
+                Add(max, num);
+
+            }
+
+        }
+
+ 
+
+ 
+
+        /// <summary>
+
+        /// 用来得到中位数，如果最大堆和最小堆的数量加起来是偶数，说明中位数得计算，那么求最大堆最小值与最小堆最大值的和的一半即可
+
+        /// </summary>
+
+        /// <returns>中位数</returns>
+
+        public double GetMedian()
+
+        {
+
+            int size = min.Count + max.Count;
+
+            //如果两个堆数据数目之和为奇数，说明返回最小堆的最大值即可（因为优先插入最小堆，最小堆会比最大堆多一个数）
+
+            if ((size & 1) == 0)
+
+                return (double)(min[min.Count - 1] + max[0]) / 2.0;
+
+ 
+
+ 
+
+            return (double)min[min.Count - 1];
+
+        }
+
+ 
+
+ 
+
+        //排好序的添加到两个堆中，都按升序排列，在调用最小堆时，则逆序调用即可
+
+        private void Add(List<int> list, int num)
+
+        {
+
+            if (list.Count == 0)
+
+                list.Add(num);
+
+            else
+
+            {
+
+                for (int i = 0; i < list.Count; i++)
+
+                {
+
+                    if (list[i] > num)
+
+                    {
+
+                        list.Insert(i, num);
+
+                        return;
+
+                    }
+
+                }
+
+                list.Add(num);
+
+            }
+
+        }
+
+    }
+
+}
