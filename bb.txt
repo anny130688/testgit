@@ -1,6 +1,9 @@
 ﻿//数据流中位数
-//ssssssss
-//kkkkkkkk
+//sssssss
+//kkkkkkk
+//aaaaaaaaaa
+//sssssssssssss
+//sdddddddddddfa
 using System;
 using System.Collections.Generic;
 首先需要保证最大堆和最小堆能够平均分配数据，因此两个堆的数目差不能超过1.为了实现平均分配，
